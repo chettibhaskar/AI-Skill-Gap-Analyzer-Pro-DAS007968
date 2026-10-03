@@ -1,0 +1,4 @@
+John Doe - Python Developer
+Skills: Python, Django, Flask, SQL, Git, HTML, CSS
+Experience: Built web apps using Python and Flask.
+Looking to become AI Engineer.

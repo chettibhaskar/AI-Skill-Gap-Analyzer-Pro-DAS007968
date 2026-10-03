@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Skill Gap Analyzer Pro | DAS007968</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+body{background:#f4f6f9; font-family: 'Segoe UI', sans-serif;}
+.card{border:none; border-radius:15px;}
+.score-circle{width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:white; margin:auto;}
+.bg-score-high{background: linear-gradient(135deg,#00c853,#009624)}
+.bg-score-mid{background: linear-gradient(135deg,#ffab00,#ff6d00)}
+.bg-score-low{background: linear-gradient(135deg,#ff3d00,#b71c1c)}
+.skill-badge{padding:8px 12px; border-radius:20px; font-size:13px; margin:3px; display:inline-block;}
+.present{background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7}
+.missing{background:#ffebee; color:#c62828; border:1px solid #ef9a9a}
+</style>
+</head>
+<body>
+<div class="container py-4">
+<!-- Header -->
+<div class="text-center mb-4">
+<h2><i class="fas fa-brain text-primary"></i> AI Skill Gap Analyzer Pro</h2>
+<p class="text-muted">Task ID: AI-SS-014 | Intern: <b>DAS007968</b> | Python 3.12</p>
+</div>
+
+<div class="row">
+<!-- Input Panel -->
+<div class="col-md-4">
+<div class="card shadow p-4 h-100">
+<h5><i class="fas fa-upload"></i> Upload Resume</h5>
+<form method="POST" enctype="multipart/form-data">
+<label class="mt-3">Target Job Role</label>
+<select name="job_role" class="form-select mb-3" required>
+{% for role in job_roles %}
+<option value="{{ role }}">{{ role }}</option>
+{% endfor %}
+</select>
+
+<label>Resume PDF / DOCX</label>
+<input type="file" name="resume_file" class="form-control mb-2" accept=".pdf,.docx">
+<div class="text-center my-2 text-muted">-- OR --</div>
+<textarea name="resume_text" class="form-control" rows="10" placeholder="Paste resume text here... Example: Python, Machine Learning, SQL, Docker..."></textarea>
+
+<button class="btn btn-primary w-100 mt-3"><i class="fas fa-chart-line"></i> Analyze Gap Pro</button>
+</form>
+</div>
+</div>
+
+<!-- Result Panel -->
+<div class="col-md-8">
+{% if result %}
+<div class="card shadow p-4 mb-3">
+<div class="row text-center align-items-center">
+<div class="col-md-4">
+<div class="score-circle {% if result.gap.score >= 70 %}bg-score-high{% elif result.gap.score >= 40 %}bg-score-mid{% else %}bg-score-low{% endif %}">
+{{ result.gap.score }}%
+</div>
+<h6 class="mt-2">{{ result.gap.level }}</h6>
+<p class="text-muted small">Level: {{ result.gap.job_level }} | Words: {{ result.text_len }}</p>
+</div>
+<div class="col-md-8 text-start">
+<h5>Analysis for {{ request.form.get('job_role') }}</h5>
+<p><b>Found {{ result.found|length }} Skills:</b><br>
+{% for skill, prof in result.found.items() %}
+<span class="skill-badge present"><i class="fas fa-check"></i> {{ skill }} - {{ prof }}%</span>
+{% endfor %}
+</p>
+<p><b>Missing ({{ result.gap.missing|length }}):</b><br>
+{% for s in result.gap.missing %}
+<span class="skill-badge missing"><i class="fas fa-times"></i> {{ s }}</span>
+{% endfor %}
+</p>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6"><div class="card shadow p-2 mb-3">{{ result.radar|safe }}</div></div>
+<div class="col-md-6"><div class="card shadow p-2 mb-3">{{ result.bar|safe }}</div></div>
+</div>
+
+<div class="card shadow p-4">
+<h5><i class="fas fa-road"></i> Personalized Learning Roadmap - {{ result.total_days }} Days to Job Ready</h5>
+<table class="table table-hover mt-3">
+<thead><tr><th>Priority</th><th>Missing Skill</th><th>Recommended Course</th><th>Days</th></tr></thead>
+<tbody>
+{% for item in result.roadmap %}
+<tr>
+<td>{% if item.priority=='High' %}<span class="badge bg-danger">{{ item.priority }}</span>{% elif item.priority=='Medium' %}<span class="badge bg-warning">{{ item.priority }}</span>{% else %}<span class="badge bg-secondary">{{ item.priority }}</span>{% endif %}</td>
+<td><b>{{ item.skill }}</b></td>
+<td>{{ item.course }}</td>
+<td>{{ item.days }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="alert alert-info"><i class="fas fa-lightbulb"></i> <b>Tip:</b> Start with High Priority skills. Build 1 project per skill and push to GitHub to increase ATS score.</div>
+</div>
+
+{% else %}
+<div class="card shadow p-5 text-center">
+<img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png" width="100" class="mx-auto mb-3">
+<h5>Ready to Analyze?</h5>
+<p class="text-muted">Upload your resume PDF and select your dream role. Our AI will extract skills using spaCy, calculate ATS score, and generate a custom learning roadmap.</p>
+<ul class="text-start text-muted small">
+<li>✔ Supports PDF & DOCX parsing via PyMuPDF</li>
+<li>✔ Advanced skill extraction + proficiency scoring</li>
+<li>✔ Radar chart, Bar chart, Gap analysis</li>
+<li>✔ Personalized 30-150 day roadmap</li>
+</ul>
+</div>
+{% endif %}
+</div>
+</div>
+
+<footer class="text-center mt-4 text-muted small">Built by DAS007968 | AI Skill Gap Analyzer | Flask + spaCy + Plotly + Sklearn</footer>
+</div>
+</body>
+</html>

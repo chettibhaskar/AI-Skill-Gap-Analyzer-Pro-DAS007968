@@ -1,0 +1,11 @@
+{
+  "AI Engineer": {
+    "required_skills": ["Python","Machine Learning","Deep Learning","TensorFlow","PyTorch","NLP","MLOps","Docker","AWS"],
+    "preferred_skills": ["Generative AI","LangChain","Vector DBs","Kubernetes"],
+    "description": "Builds and deploys LLMs and AI systems"
+  },
+  "GenAI Engineer": {
+    "required_skills": ["Python","LLMs","Prompt Engineering","LangChain","RAG","Vector Databases","Hugging Face","FastAPI"],
+    "preferred_skills": ["Fine-tuning","AWS Bedrock","OpenAI API"]
+  }
+}
